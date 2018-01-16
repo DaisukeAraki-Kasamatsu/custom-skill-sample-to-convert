@@ -1,0 +1,31 @@
+{
+  "skillManifest": {
+    "publishingInformation": {
+      "locales": {
+        "ja-JP": {
+          "summary": "TypeScript を使って Alexa Custom Skills を作ろう",
+          "examplePhrases": [
+            "アレクサ、タイろうを開いて",
+            "アレクサ、タイろうでこんにちはと言って"
+          ],
+          "name": "タイろう",
+          "description": "TypeScript を使って Alexa Custom Skills を作ろう"
+        }
+      },
+      "isAvailableWorldwide": true,
+      "testingInstructions": "サンプル",
+      "category": "EDUCATION_AND_REFERENCE",
+      "distributionCountries": [
+        "JP"
+      ]
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "sourceDir": "lambda/custom"
+        }
+      }
+    },
+    "manifestVersion": "1.0"
+  }
+}

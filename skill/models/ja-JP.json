@@ -1,0 +1,43 @@
+{
+    "interactionModel":{
+        "languageModel":{
+            "invocationName":"タイろう",
+            "types":[],
+            "intents":[
+                {
+                  "name": "AMAZON.CancelIntent",
+                  "samples": []
+                },
+                {
+                  "name": "AMAZON.HelpIntent",
+                  "samples": []
+                },
+                {
+                  "name": "AMAZON.StopIntent",
+                  "samples": []
+                },
+                {
+                    "name":"HelloWorldIntent",
+                    "slots":[
+                    ],
+                    "samples":[
+                        "声を聞かせて"
+                    ]
+                },
+                {
+                    "name":"FirstIntent",
+                    "slots":[
+                        {
+                            "name":"number",
+                            "type":"AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples":[
+                        "{number} 番",
+                        "{number}"
+                    ]
+                }
+            ]
+        }
+    }
+}
