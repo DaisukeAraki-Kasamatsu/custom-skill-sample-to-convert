@@ -4,6 +4,7 @@ Thumbs.db
 
 # Generated files
 .ask
+skill/lambda/custom/dist
 package-lock.json
 
 # Logs
