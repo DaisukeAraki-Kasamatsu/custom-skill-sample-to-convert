@@ -1,4 +1,7 @@
 import * as Alexa from 'alexa-sdk';
+import { handler as firstHandler } from './handlers/first-handler';
+import { handler as newSessionHandler } from './handlers/new-session-handler';
+import { handler as startHandler } from './handlers/start-handler';
 
 export const handler = (
   event: Alexa.RequestBody<any>,
@@ -10,12 +13,6 @@ export const handler = (
   alexa.resources = languageStrings;
   alexa.registerHandlers(newSessionHandler, startHandler, firstHandler);
   alexa.execute();
-};
-
-const handlerStates = {
-  NONE: '',
-  START_MODE: '_START_MODE',
-  FIRST_MODE: '_FIRST_MODE'
 };
 
 const languageStrings = {
@@ -35,71 +32,3 @@ const languageStrings = {
     }
   }
 };
-
-const newsContents: {[key: string]: string } = {
-  '1': '1番です',
-  '2': '2番です',
-  '3': '3番です'
-};
-
-const newSessionHandler: Alexa.Handlers<any> = {
-  'LaunchRequest': function (this: Alexa.Handler<any>) {
-    this.handler.state = handlerStates.START_MODE;
-    this.emitWithState('Start');
-  },
-  'AMAZON.HelpIntent': function (this: Alexa.Handler<any>) {
-    this.emit(':ask', this.t('ASK_HELP_MESSAGE'));
-  },
-  'Unhandled': function (this: Alexa.Handler<any>) {
-    this.emit(':ask', this.t('ASK_UNHANDLED_MESSAGE'));
-  }
-};
-
-const startHandler: Alexa.Handlers<any> = Alexa.CreateStateHandler(handlerStates.START_MODE, {
-  'Start': function (this: Alexa.Handler<any>) {
-    this.handler.state = handlerStates.FIRST_MODE;
-    this.emit(':ask', this.t('ASK_START_MODE'), this.t('ASK_START_MODE_REPROMPT'));
-  },
-  'HelloWorldIntent': function (this: Alexa.Handler<any>) {
-    this.emit(':ask', this.t('TELL_HELLO_WORLD'), this.t('ASK_ANYTHING_ELSE'));
-  },
-  'AMAZON.HelpIntent': function (this: Alexa.Handler<any>) {
-    this.emit(':ask', this.t('ASK_HELP_MESSAGE'));
-  },
-  'AMAZON.StopIntent' : function (this: Alexa.Handler<any>) {
-    this.emit(':tell', this.t('TELL_GOOD_BYE'));
-  },
-  'Unhandled': function (this: Alexa.Handler<any>) {
-    this.emit(':ask', this.t('ASK_UNHANDLED_MESSAGE'));
-  }
-});
-
-const firstHandler: Alexa.Handlers<any> = Alexa.CreateStateHandler(handlerStates.FIRST_MODE, {
-  'FirstIntent': function (this: Alexa.Handler<any>) {
-    const sayNumber = this.event.request.intent.slots.number.value;
-
-    if (!sayNumber || !newsContents.hasOwnProperty(sayNumber)) {
-      this.emitWithState('Unhandled');
-    }
-
-    getNewsAsync(sayNumber)
-      .then((content) => {
-        this.emit(':ask', this.t('ASK_ANSWER_NUMBER', content), this.t('ASK_ANSWER_NUMBER_REPROMPT'));
-      })
-      .catch((error) => {
-        this.emitWithState('Unhandled');
-      });
-  },
-  'AMAZON.StopIntent' : function (this: Alexa.Handler<any>) {
-    this.emit(':tell', this.t('TELL_GOOD_BYE'));
-  },
-  'Unhandled': function (this: Alexa.Handler<any>) {
-    this.emit(':ask', this.t('ASK_UNHANDLED_MESSAGE'));
-  }
-});
-
-function getNewsAsync(sayNumber: string) {
-  return new Promise((resolve, reject) => {
-    resolve(newsContents[sayNumber]);
-  });
-}
