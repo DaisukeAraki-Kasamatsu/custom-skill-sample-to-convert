@@ -26,7 +26,8 @@
         "singleline": "never",
         "multiline": "never"
       }
-    ]
+    ],
+    "unified-signatures": false
   },
   "rulesDirectory": []
 }

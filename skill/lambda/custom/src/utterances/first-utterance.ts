@@ -17,11 +17,23 @@ export class FirstUtterance extends UtteranceBase {
    * コンストラクタ
    * @param context Alexaハンドラコンテキスト
    */
-  constructor(context: Alexa.Handler<any>) {
+  constructor(context: Alexa.Handler<any>);
+  /**
+   * コンストラクタ
+   * @param context Alexaハンドラコンテキスト
+   * @param repository ニュースリポジトリ
+   */
+  constructor(context: Alexa.Handler<any>, repository: NewsRepository);
+  /**
+   * コンストラクタ
+   * @param context Alexaハンドラコンテキスト
+   * @param repository ニュースリポジトリ
+   */
+  constructor(context: Alexa.Handler<any>, repository?: NewsRepository) {
     super(context);
 
     // リポジトリ作成
-    this.repository = new NewsRepository();
+    this.repository = (repository) ? repository : new NewsRepository();
   }
 
   /**
