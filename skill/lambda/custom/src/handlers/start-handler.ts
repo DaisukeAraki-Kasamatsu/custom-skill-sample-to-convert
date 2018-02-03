@@ -1,5 +1,6 @@
 import * as Alexa from 'alexa-sdk';
 import { HandlerStateTypes } from '../enums/handler-state-types';
+import { HelpIntent } from '../intents/help-intent';
 
 export const handler: Alexa.Handlers<any> = Alexa.CreateStateHandler(HandlerStateTypes.START_MODE, {
   'Start': function (this: Alexa.Handler<any>) {
@@ -10,7 +11,7 @@ export const handler: Alexa.Handlers<any> = Alexa.CreateStateHandler(HandlerStat
     this.emit(':ask', this.t('TELL_HELLO_WORLD'), this.t('ASK_ANYTHING_ELSE'));
   },
   'AMAZON.HelpIntent': function (this: Alexa.Handler<any>) {
-    this.emit(':ask', this.t('ASK_HELP_MESSAGE'));
+    (new HelpIntent(this)).execute();
   },
   'AMAZON.StopIntent' : function (this: Alexa.Handler<any>) {
     this.emit(':tell', this.t('TELL_GOOD_BYE'));
