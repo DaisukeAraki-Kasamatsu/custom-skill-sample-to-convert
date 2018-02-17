@@ -3,6 +3,7 @@ import * as Mocha from 'mocha';
 import * as Sinon from 'sinon';
 
 import * as Alexa from 'alexa-sdk';
+import * as AWS from 'aws-sdk';
 import { It, Mock } from 'moq.ts';
 import { IFirstUtteranceCondition } from '../../conditions/first-utterance-condition';
 import { NewsRepository } from '../../models/news-repository';
@@ -30,7 +31,7 @@ const contextMock = new Mock<Alexa.Handler<any>>('test')
  */
 describe('first-utteranceクラスのテスト', () => {
   // ニュースリポジトリスタブ
-  const repository = new NewsRepository();
+  const repository = new NewsRepository(new AWS.DynamoDB());
 
   // スタブ作成
   const repositoryStubGetAsync = Sinon.stub(repository, 'getAsync');

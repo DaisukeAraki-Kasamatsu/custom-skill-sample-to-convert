@@ -1,4 +1,5 @@
 import * as Alexa from 'alexa-sdk';
+import * as AWS from 'aws-sdk';
 import { IFirstUtteranceCondition } from '../conditions/first-utterance-condition';
 import { IFirstUtteranceResult } from '../models/first-utterance-result';
 import { NewsRepository } from '../models/news-repository';
@@ -33,7 +34,7 @@ export class FirstUtterance extends UtteranceBase {
     super(context);
 
     // リポジトリ作成
-    this.repository = (repository) ? repository : new NewsRepository();
+    this.repository = (repository) ? repository : new NewsRepository(new AWS.DynamoDB());
   }
 
   /**

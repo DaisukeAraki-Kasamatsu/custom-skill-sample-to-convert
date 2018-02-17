@@ -7,6 +7,9 @@ Thumbs.db
 skill/lambda/custom/dist
 package-lock.json
 
+# localstack
+__localstack__
+
 # Logs
 logs
 *.log

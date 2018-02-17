@@ -1,12 +1,19 @@
+import * as AWS from 'aws-sdk';
+
 /**
  * ニュースリポジトリクラス
  */
 export class NewsRepository {
   /**
+   * DBコンテキスト
+   */
+  private dbContext: AWS.DynamoDB;
+
+  /**
    * コンストラクタ
    */
-  constructor() {
-    // 処理なし
+  constructor(dbContext: AWS.DynamoDB) {
+    this.dbContext = dbContext;
   }
 
   /**
@@ -15,19 +22,36 @@ export class NewsRepository {
    * @returns 内容
    */
   public getAsync(sayNumber: string): Promise<string> {
-    // データ（便宜上このクラスに定義しているが、本来はデータベースからエンティティを返す想定）
-    const newsContents: {[key: string]: string } = {
-      '1': '1番です',
-      '2': '2番です',
-      '3': '3番です'
-    };
+    return new Promise(async (resolve, reject) => {
+      // getItemパラメータ設定
+      const params: AWS.DynamoDB.GetItemInput = {
+        TableName: 'news',
+        Key: {
+          sequenceId: {
+            N: sayNumber
+          }
+        }
+      };
 
-    return new Promise((resolve, reject) => {
-      if (newsContents[sayNumber]) {
-        resolve(newsContents[sayNumber]);
-      } else {
-        reject();
+      let result: AWS.DynamoDB.GetItemOutput;
+
+      try {
+        // データ取得
+        result = await this.dbContext.getItem(params).promise();
+      } catch (err) {
+        reject(err);
+        return;
       }
+
+      // アイテムが未定義であるか判定
+      if (!result.Item) {
+        // 未定義の場合リジェクト
+        reject(`${sayNumber}番のデータは見つかりませんでした。`);
+        return;
+      }
+
+      // 結果を文字列で返す
+      resolve(String(result.Item.contents.S));
     });
   }
 }

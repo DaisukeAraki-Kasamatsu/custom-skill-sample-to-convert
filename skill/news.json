@@ -1,0 +1,40 @@
+{
+  "news": [
+    {
+      "PutRequest": {
+        "Item": {
+          "sequenceId": {
+            "N": "1"
+          },
+          "contents": {
+            "S": "1番ですね"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "sequenceId": {
+            "N": "2"
+          },
+          "contents": {
+            "S": "2番ですね"
+          }
+        }
+      }
+    },
+    {
+      "PutRequest": {
+        "Item": {
+          "sequenceId": {
+            "N": "3"
+          },
+          "contents": {
+            "S": "3番ですね"
+          }
+        }
+      }
+    }
+  ]
+}
