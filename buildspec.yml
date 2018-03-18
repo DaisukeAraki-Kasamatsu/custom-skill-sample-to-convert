@@ -1,0 +1,77 @@
+version: 0.2
+
+# CodeBuild環境変数
+# ALEXA_VENDOR_ID
+# ALEXA_SKILL_ID
+# AWS_LAMBDA_FUNCTION_NAME
+
+env:
+  # 変数宣言
+  variables:
+    # AWS CLI プロファイル名
+    AWS_CLI_PROFILE_NAME: alexa-custom-skill-profile
+  # パラメータストア宣言
+  parameter-store:
+    # AWS アクセスキーID
+    AWS_ACCESS_KEY_ID: "alexa-aws-access-key-id"
+    # AWS シークレットアクセスキー
+    AWS_SECRET_ACCESS_KEY: "alexa-aws-secret-access-key"
+    # LWA アクセストークン
+    LWA_ACCESS_TOKEN: "alexa-lwa-access-token"
+    # LWA リフレッシュトークン
+    LWA_REFRESH_TOKEN: "alexa-lwa-refresh-token"
+phases:
+# ビルド環境でのパッケージのインストール
+  install:
+    commands:
+      # メッセージ
+      - echo install phase...
+      # 現在のディレクトリを確認
+      - pwd && ls -la ~/
+      # AWS-CLI アップデート
+      - pip install awscli --upgrade
+      # ASK-CLI インストール
+      - npm install -g ask-cli
+      # 各種バージョン確認
+      - npm --version && aws --version && ask -v
+# ビルド前処理
+  pre_build:
+    commands:
+      # メッセージ
+      - echo pre_build phase...
+      # AWS-CLI 設定
+      - aws configure --profile $AWS_CLI_PROFILE_NAME set aws_access_key_id $AWS_ACCESS_KEY_ID
+      - aws configure --profile $AWS_CLI_PROFILE_NAME set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+      - aws configure --profile $AWS_CLI_PROFILE_NAME set default.region us-east-1
+      # ディレクトリ移動
+      - cd ./skill
+      # ASK-CLI 設定
+      - mkdir -p ~/.ask && cat ./templates/cli_config.tmpl | envsubst > ~/.ask/cli_config
+      # ASK-CLI スキル設定
+      - mkdir -p ./.ask && cat ./templates/config.tmpl | envsubst > ./.ask/config
+# ビルド
+  build:
+    commands:
+      # メッセージ
+      - echo build phase...
+      # ディレクトリ移動
+      - ls -la && cd ./lambda/custom && ls -la
+      # npmインストール
+      - npm install --loglevel error
+      # トランスパイル
+      - $(npm bin)/tsc
+      # node_modules削除
+      - rm -rf ./node_modules
+      # パッケージ復元
+      - npm install --production --loglevel warn
+# ビルド後処理
+  post_build:
+    commands:
+      # メッセージ
+      - echo Build completed on
+      # 不要ディレクトリ、ファイル削除
+      - rm -rf coverage mytypes src tsconfig.json tslint.json
+      # ２つ上のディレクトリへ移動
+      - cd ../.. && ls -la
+      # デプロイ
+      - ask deploy
