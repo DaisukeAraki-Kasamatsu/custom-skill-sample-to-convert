@@ -27,7 +27,7 @@ phases:
       # メッセージ
       - echo install phase...
       # 現在のディレクトリを確認
-      - pwd && ls -la ~/
+      - pwd && ls -la
       # AWS-CLI アップデート
       - pip install awscli --upgrade
       # ASK-CLI インストール
