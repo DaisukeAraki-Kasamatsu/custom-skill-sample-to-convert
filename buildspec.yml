@@ -42,7 +42,7 @@ phases:
       # AWS-CLI 設定
       - aws configure --profile $AWS_CLI_PROFILE_NAME set aws_access_key_id $AWS_ACCESS_KEY_ID
       - aws configure --profile $AWS_CLI_PROFILE_NAME set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-      - aws configure --profile $AWS_CLI_PROFILE_NAME set default.region us-east-1
+      - aws configure --profile $AWS_CLI_PROFILE_NAME set default.region ap-northeast-1
       # ディレクトリ移動
       - cd ./skill
       # ASK-CLI 設定
